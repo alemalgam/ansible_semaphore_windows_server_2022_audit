@@ -1,0 +1,21 @@
+---
+- hosts: windows
+  gather_facts: yes
+  tasks:
+    - name: Check OS version
+      win_shell: |
+        Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion
+      register: os_info
+
+    - name: Display OS info
+      debug:
+        var: os_info.stdout_lines
+
+    - name: Check installed updates
+      win_shell: |
+        Get-HotFix | Select-Object Description, InstalledOn
+      register: updates
+
+    - name: Display updates
+      debug:
+        var: updates.stdout_lines

@@ -1,0 +1,7 @@
+---
+- hosts: windows
+  gather_facts: yes
+  roles:
+    - role: ansible-lockdown.windows_2022_cis
+      vars:
+        lockdown_audit_only: true
