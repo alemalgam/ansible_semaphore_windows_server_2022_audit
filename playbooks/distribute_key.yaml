@@ -1,0 +1,5 @@
+- name: Add SSH key for anadmin
+  authorized_key:
+    user: anadmin
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
