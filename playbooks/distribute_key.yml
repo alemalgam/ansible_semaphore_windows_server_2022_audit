@@ -2,19 +2,21 @@
 - name: Distribute SSH key to Windows hosts
   hosts: windows
   gather_facts: yes
+  vars:
+    ansible_remote_tmp: 'C:\Windows\Temp\ansible'  # Custom remote tmp path for Windows
   tasks:
     - name: Ensure .ssh directory exists
       win_file:
-        path: "{{ ansible_env.USERPROFILE }}\\.ssh"
+        path: "{{ ansible_user_dir }}\\.ssh"
         state: directory
 
     - name: Ensure authorized_keys file exists
       win_file:
-        path: "{{ ansible_env.USERPROFILE }}\\.ssh\\authorized_keys"
+        path: "{{ ansible_user_dir }}\\.ssh\\authorized_keys"
         state: touch
 
     - name: Add SSH public key if not present
       win_lineinfile:
-        path: "{{ ansible_env.USERPROFILE }}\\.ssh\\authorized_keys"
+        path: "{{ ansible_user_dir }}\\.ssh\\authorized_keys"
         line: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
         state: present
