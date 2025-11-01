@@ -1,7 +1,7 @@
 ---
 - name: Distribute SSH key to Windows hosts
   hosts: windows
-  gather_facts: no
+  gather_facts: yes
   tasks:
     - name: Ensure .ssh directory exists
       win_file:
