@@ -1,0 +1,26 @@
+---
+- name: Install Python on Windows via SSH
+  hosts: windows
+  gather_facts: no
+  vars:
+    ansible_shell_type: powershell
+    ansible_remote_tmp: 'C:\\Windows\\Temp\\ansible'
+    python_version: "3.11.9"
+    python_installer_url: "https://www.python.org/ftp/python/{{ python_version }}/python-{{ python_version }}-amd64.exe"
+    installer_path: "$env:TEMP\\python-installer.exe"
+  tasks:
+    - name: Download Python installer
+      shell: |
+        Invoke-WebRequest -Uri "{{ python_installer_url }}" -OutFile "{{ installer_path }}"
+
+    - name: Install Python silently
+      shell: |
+        Start-Process -FilePath "{{ installer_path }}" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0" -Wait
+
+    - name: Remove installer
+      shell: |
+        Remove-Item "{{ installer_path }}"
+
+    - name: Verify Python installation
+      shell: |
+        python --version
