@@ -1,22 +1,17 @@
 ---
-- name: Distribute SSH key to Windows hosts
+- name: Distribute SSH key to Windows hosts over SSH
   hosts: windows
-  gather_facts: yes
+  gather_facts: no
   vars:
-    ansible_remote_tmp: 'C:\Windows\Temp\ansible'  # Custom remote tmp path for Windows
+    ansible_remote_tmp: '/tmp/ansible'  # Use a Unix-style tmp path for SSH
   tasks:
     - name: Ensure .ssh directory exists
-      win_file:
-        path: "{{ ansible_user_dir }}\\.ssh"
-        state: directory
+      shell: 'mkdir -p ~/.ssh'
 
     - name: Ensure authorized_keys file exists
-      win_file:
-        path: "{{ ansible_user_dir }}\\.ssh\\authorized_keys"
-        state: touch
+      shell: 'touch ~/.ssh/authorized_keys'
 
     - name: Add SSH public key if not present
-      win_lineinfile:
-        path: "{{ ansible_user_dir }}\\.ssh\\authorized_keys"
-        line: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-        state: present
+      shell: |
+        PUBKEY="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        grep -qxF "$PUBKEY" ~/.ssh/authorized_keys || echo "$PUBKEY" >> ~/.ssh/authorized_keys
