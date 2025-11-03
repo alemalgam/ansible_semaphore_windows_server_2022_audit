@@ -2,6 +2,9 @@
 - name: Distribute SSH key to Windows hosts over SSH (PowerShell)
   hosts: windows
   gather_facts: no
+  become: yes
+  become_method: runas
+  become_user: anadmin
   tasks:
     - name: Ensure .ssh directory exists
       win_shell: |
