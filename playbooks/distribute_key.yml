@@ -1,7 +1,7 @@
 ---
 - name: Distribute SSH key to Windows hosts over SSH (PowerShell)
   hosts: windows
-  gather_facts: yes
+  gather_facts: no
   tasks:
     - name: Ensure .ssh directory exists
       shell: |
