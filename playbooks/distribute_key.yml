@@ -20,8 +20,8 @@
 
     - name: Add SSH public key if not present
       win_shell: |
-        $pubKey = "{{ lookup('file', '/home/semaphore/.ssh/id_rsa.pub') }}"
+        $pubKey = "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
         $authFile = "$env:USERPROFILE\.ssh\authorized_keys"
-        if (-not (Select-String -Path $authFile -Pattern $pubKey)) {
+        if (-not (Select-String -Path $authFile -Pattern $pubKey -SimpleMatch)) {
             Add-Content -Path $authFile -Value $pubKey
         }
